@@ -2,8 +2,10 @@
   import { ref } from 'vue';
   import { RouterLink } from 'vue-router';
   import BaseContainer from '@/components/BaseContainer.vue';
+  import AuthModal from '@/components/AuthModal.vue';
 
   const searchUsername = ref('');
+  const isAuthenticated = ref(false);
 
   const onSearch = () => {};
 </script>
@@ -21,9 +23,19 @@
             @search="onSearch"
           />
         </div>
-        <div class="right-content">
-          <AButton type="primary">SignUp</AButton>
-          <AButton type="primary">Login</AButton>
+        <div
+          v-if="!isAuthenticated"
+          class="right-content"
+        >
+          <AuthModal />
+          <AuthModal :isLogin="true" />
+        </div>
+        <div
+          v-else
+          class="right-content"
+        >
+          <AButton type="primary">Profile</AButton>
+          <AButton type="primary">Logout</AButton>
         </div>
       </div>
     </BaseContainer>
@@ -43,6 +55,11 @@
 
   .left-content a {
     margin-right: 10px;
+  }
+
+  .right-content {
+    display: flex;
+    align-items: center;
   }
 
   .right-content button {
