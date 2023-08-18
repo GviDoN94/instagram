@@ -1,13 +1,19 @@
 <script setup>
   import { ref } from 'vue';
-  import { RouterLink } from 'vue-router';
+  import { RouterLink, useRouter } from 'vue-router';
   import BaseContainer from '@/components/BaseContainer.vue';
   import AuthModal from '@/components/AuthModal.vue';
 
+  const router = useRouter();
   const searchUsername = ref('');
   const isAuthenticated = ref(false);
 
-  const onSearch = () => {};
+  const onSearch = () => {
+    if (searchUsername.value) {
+      router.push(`/profile/${searchUsername.value}`);
+      searchUsername.value = '';
+    }
+  };
 </script>
 
 <template>
