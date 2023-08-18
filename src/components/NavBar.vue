@@ -3,10 +3,13 @@
   import { RouterLink, useRouter } from 'vue-router';
   import BaseContainer from '@/components/BaseContainer.vue';
   import AuthModal from '@/components/AuthModal.vue';
+  import { useUserStore } from '@/stores/users';
+
+  const { user } = useUserStore();
 
   const router = useRouter();
   const searchUsername = ref('');
-  const isAuthenticated = ref(false);
+  const isAuthenticated = ref(user);
 
   const onSearch = () => {
     if (searchUsername.value) {

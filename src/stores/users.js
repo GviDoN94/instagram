@@ -19,7 +19,47 @@ export const useUserStore = defineStore('users', () => {
     errorMessage.value = '';
   };
 
-  const handleLogin = () => {};
+  const handleLogin = async (credentials) => {
+    const { email, password } = credentials;
+
+    if (!password.length) {
+      errorMessage.value = 'Password cannot be empty';
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      errorMessage.value = 'Email is invalid';
+      return;
+    }
+
+    loading.value = true;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      loading.value = false;
+      errorMessage.value = error.message;
+      return;
+    }
+
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select()
+      .eq('email', email)
+      .single();
+
+    user.value = {
+      id: existingUser.id,
+      email: existingUser.email,
+      username: existingUser.username,
+    };
+
+    loading.value = false;
+    clearError();
+  };
 
   const handleSingup = async (credentials) => {
     const { email, password, username } = credentials;
@@ -53,7 +93,7 @@ export const useUserStore = defineStore('users', () => {
       return;
     }
 
-    errorMessage.value = '';
+    clearError();
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -87,7 +127,30 @@ export const useUserStore = defineStore('users', () => {
 
   const handleLogout = () => {};
 
-  const getUser = () => {};
+  const getUser = async () => {
+    loading.value = true;
+    const { data } = await supabase.auth.getUser();
+
+    if (!data.user) {
+      loading.value = false;
+      user.value = null;
+      return;
+    }
+
+    const { data: userWithEmail } = await supabase
+      .from('users')
+      .select()
+      .eq('email', data.user.email)
+      .single();
+
+    user.value = {
+      id: userWithEmail.id,
+      email: userWithEmail.email,
+      username: userWithEmail.username,
+    };
+
+    loading.value = false;
+  };
 
   return {
     user,

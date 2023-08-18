@@ -16,9 +16,14 @@
 
   const showModal = () => {
     visible.value = true;
+    userStore.getUser();
   };
   const handleOk = async () => {
-    await userStore.handleSingup(userCredentials);
+    if (isLogin) {
+      await userStore.handleLogin(userCredentials);
+    } else {
+      await userStore.handleSingup(userCredentials);
+    }
     if (user.value) {
       visible.value = false;
     }
