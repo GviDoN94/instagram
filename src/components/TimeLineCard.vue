@@ -1,7 +1,3 @@
-<script setup>
-  defineProps(['post']);
-</script>
-
 <template>
   <ACard
     hoverable
@@ -18,6 +14,10 @@
     </ACardMeta>
   </ACard>
 </template>
+
+<script setup>
+  defineProps(['post']);
+</script>
 
 <style scoped>
   .card {

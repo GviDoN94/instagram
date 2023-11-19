@@ -1,7 +1,3 @@
-<script setup>
-  defineProps(['username', 'userInfo']);
-</script>
-
 <template>
   <div class="userbar-container">
     <div class="top-content">
@@ -18,6 +14,10 @@
     </div>
   </div>
 </template>
+
+<script setup>
+  defineProps(['username', 'userInfo']);
+</script>
 
 <style scoped>
   .userbar-container {

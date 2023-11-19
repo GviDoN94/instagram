@@ -1,48 +1,3 @@
-<script setup>
-  import { ref, reactive, watch } from 'vue';
-  import { useUserStore } from '@/stores/users';
-  import { storeToRefs } from 'pinia';
-
-  const { isLogin } = defineProps(['isLogin']);
-  const visible = ref(false);
-  const title = isLogin ? 'Login' : 'SingUp';
-  const userStore = useUserStore();
-  const { errorMessage, loading, user } = storeToRefs(userStore);
-  const userCredentials = reactive({
-    email: '',
-    password: '',
-    username: '',
-  });
-
-  const showModal = () => {
-    visible.value = true;
-    userStore.getUser();
-  };
-  const handleOk = async () => {
-    if (isLogin) {
-      await userStore.handleLogin(userCredentials);
-    } else {
-      await userStore.handleSingup(userCredentials);
-    }
-    if (user.value) {
-      visible.value = false;
-    }
-  };
-
-  const handleCancel = () => {
-    visible.value = false;
-  };
-
-  watch(visible, () => {
-    if (visible.value === false) {
-      userStore.clearError();
-      (userCredentials.email = ''),
-        (userCredentials.password = ''),
-        (userCredentials.username = '');
-    }
-  });
-</script>
-
 <template>
   <div>
     <AButton
@@ -105,6 +60,50 @@
     </AModal>
   </div>
 </template>
+
+<script setup>
+  import { ref, reactive, watch } from 'vue';
+  import { useUserStore } from '@/stores/users';
+  import { storeToRefs } from 'pinia';
+
+  const { isLogin } = defineProps(['isLogin']);
+  const visible = ref(false);
+  const title = isLogin ? 'Login' : 'SingUp';
+  const userStore = useUserStore();
+  const { errorMessage, loading, user } = storeToRefs(userStore);
+  const userCredentials = reactive({
+    email: '',
+    password: '',
+    username: '',
+  });
+
+  const showModal = () => {
+    visible.value = true;
+  };
+  const handleOk = async () => {
+    if (isLogin) {
+      await userStore.handleLogin(userCredentials);
+    } else {
+      await userStore.handleSingup(userCredentials);
+    }
+    if (user.value) {
+      visible.value = false;
+    }
+  };
+
+  const handleCancel = () => {
+    visible.value = false;
+  };
+
+  watch(visible, () => {
+    if (visible.value === false) {
+      userStore.clearError();
+      (userCredentials.email = ''),
+        (userCredentials.password = ''),
+        (userCredentials.username = '');
+    }
+  });
+</script>
 
 <style scoped>
   .btn {

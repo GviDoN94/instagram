@@ -1,3 +1,15 @@
+<template>
+  <BaseContainer>
+    <div class="timeline-container">
+      <TimeLineCard
+        v-for="post in data"
+        :key="post.id"
+        :post="post"
+      />
+    </div>
+  </BaseContainer>
+</template>
+
 <script setup>
   import BaseContainer from '@/components/BaseContainer.vue';
   import TimeLineCard from '@/components/TimeLineCard.vue';
@@ -17,18 +29,6 @@
     },
   ];
 </script>
-
-<template>
-  <BaseContainer>
-    <div class="timeline-container">
-      <TimeLineCard
-        v-for="post in data"
-        :key="post.id"
-        :post="post"
-      />
-    </div>
-  </BaseContainer>
-</template>
 
 <style scoped>
   .timeline-container {

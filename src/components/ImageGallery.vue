@@ -1,7 +1,3 @@
-<script setup>
-  defineProps(['posts']);
-</script>
-
 <template>
   <div class="image-gallery-container">
     <img
@@ -11,6 +7,10 @@
     />
   </div>
 </template>
+
+<script setup>
+  defineProps(['posts']);
+</script>
 
 <style scoped>
   .image-gallery-container {

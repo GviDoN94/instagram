@@ -1,9 +1,3 @@
-<script setup>
-  import BaseContainer from '@/components/BaseContainer.vue';
-  import UserBar from '@/components/UserBar.vue';
-  import ImageGallery from './ImageGallery.vue';
-</script>
-
 <template>
   <BaseContainer>
     <div class="profile-container">
@@ -32,6 +26,12 @@
     </div>
   </BaseContainer>
 </template>
+
+<script setup>
+  import BaseContainer from '@/components/BaseContainer.vue';
+  import UserBar from '@/components/UserBar.vue';
+  import ImageGallery from './ImageGallery.vue';
+</script>
 
 <style scoped>
   .profile-container {
