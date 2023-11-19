@@ -2,6 +2,7 @@
   <div class="userbar-container">
     <div class="top-content">
       <ATypographyTitle :level="2">{{ username }}</ATypographyTitle>
+      <UploadPhoto v-if="user && profileUsername === user.username" />
     </div>
     <div class="bottom-content">
       <ATypographyTitle :level="5">{{ userInfo.posts }} posts</ATypographyTitle>
@@ -16,7 +17,18 @@
 </template>
 
 <script setup>
+  import UploadPhoto from '@/components/UploadPhoto.vue';
+  import { useRoute } from 'vue-router';
+  import { useUserStore } from '@/stores/users';
+  import { storeToRefs } from 'pinia';
+
   defineProps(['username', 'userInfo']);
+
+  const route = useRoute();
+  const userStore = useUserStore();
+
+  const { user } = storeToRefs(userStore);
+  const { username: profileUsername } = route.params;
 </script>
 
 <style scoped>
@@ -33,5 +45,11 @@
     margin: 0 !important;
     padding: 0;
     margin-right: 30px !important;
+  }
+
+  .top-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>

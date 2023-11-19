@@ -2,6 +2,7 @@
   <BaseContainer>
     <div class="profile-container">
       <UserBar
+        :key="$route.params.username"
         username="qwetqw"
         :userInfo="{
           posts: 5,
