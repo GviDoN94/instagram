@@ -6,16 +6,29 @@
       title="Upload Photo"
       @ok="handleOk"
     >
-      <input
-        type="file"
-        accept=".jpeg,.png"
-        @change="handleUploadChange"
-      />
-      <AInput
-        v-model:value="caption"
-        placeholder="Caption..."
-        :maxLength="50"
-      />
+      <div v-if="!loading">
+        <input
+          type="file"
+          accept=".jpeg,.png"
+          @change="handleUploadChange"
+        />
+        <AInput
+          v-model:value="caption"
+          placeholder="Caption..."
+          :maxLength="50"
+        />
+        <ATypographyText
+          v-if="errorMessage"
+          type="danger"
+          >{{ errorMessage }}</ATypographyText
+        >
+      </div>
+      <div
+        v-else
+        class="spinner"
+      >
+        <ASpin />
+      </div>
     </AModal>
   </div>
 </template>
@@ -30,6 +43,8 @@
 
   const { user } = storeToRefs(userStore);
 
+  const loading = ref(false);
+  const errorMessge = ref('');
   const visible = ref(false);
   const caption = ref('');
   const file = ref(null);
@@ -39,20 +54,26 @@
   };
 
   const handleOk = async () => {
+    loading.value = true;
     const fileName = Math.floor(Math.random() * 1000000000000000);
     if (file.value) {
       const { data, error } = await supabase.storage
         .from('images')
         .upload('public/' + fileName, file.value);
 
-      if (data) {
-        await supabase.from('posts').insert({
-          url: data.path,
-          caption: caption.value,
-          owner_id: user.value.id,
-        });
+      if (error) {
+        loading.value = false;
+        return (errorMessge.value = 'Unable to upload image');
       }
+
+      await supabase.from('posts').insert({
+        url: data.path,
+        caption: caption.value,
+        owner_id: user.value.id,
+      });
     }
+
+    loading.value = true;
   };
 
   const handleUploadChange = (e) => {
@@ -65,5 +86,11 @@
 <style scoped>
   input {
     margin-top: 10px;
+  }
+
+  .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>
