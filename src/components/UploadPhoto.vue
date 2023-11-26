@@ -20,8 +20,9 @@
         <ATypographyText
           v-if="errorMessage"
           type="danger"
-          >{{ errorMessage }}</ATypographyText
         >
+          {{ errorMessage }}
+        </ATypographyText>
       </div>
       <div
         v-else
@@ -38,6 +39,8 @@
   import { supabase } from '@/supabase';
   import { useUserStore } from '@/stores/users';
   import { storeToRefs } from 'pinia';
+
+  const props = defineProps(['addNewPost']);
 
   const userStore = useUserStore();
 
@@ -56,6 +59,8 @@
   const handleOk = async () => {
     loading.value = true;
     const fileName = Math.floor(Math.random() * 1000000000000000);
+    let filePath;
+
     if (file.value) {
       const { data, error } = await supabase.storage
         .from('images')
@@ -66,6 +71,8 @@
         return (errorMessge.value = 'Unable to upload image');
       }
 
+      filePath = data.path;
+
       await supabase.from('posts').insert({
         url: data.path,
         caption: caption.value,
@@ -73,7 +80,13 @@
       });
     }
 
-    loading.value = true;
+    loading.value = false;
+    visible.value = false;
+    caption.value = '';
+    props.addNewPost({
+      url: filePath,
+      caption: caption.value,
+    });
   };
 
   const handleUploadChange = (e) => {

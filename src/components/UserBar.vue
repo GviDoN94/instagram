@@ -2,7 +2,10 @@
   <div class="userbar-container">
     <div class="top-content">
       <ATypographyTitle :level="2">{{ username }}</ATypographyTitle>
-      <UploadPhoto v-if="user && profileUsername === user.username" />
+      <UploadPhoto
+        v-if="user && profileUsername === user.username"
+        :addNewPost="addNewPost"
+      />
     </div>
     <div class="bottom-content">
       <ATypographyTitle :level="5">{{ userInfo.posts }} posts</ATypographyTitle>
@@ -22,7 +25,7 @@
   import { useUserStore } from '@/stores/users';
   import { storeToRefs } from 'pinia';
 
-  defineProps(['username', 'userInfo']);
+  defineProps(['username', 'userInfo', 'addNewPost']);
 
   const route = useRoute();
   const userStore = useUserStore();

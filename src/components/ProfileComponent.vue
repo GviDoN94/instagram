@@ -9,21 +9,9 @@
           followers: 400,
           following: 300,
         }"
+        :addNewPost="addNewPost"
       />
-      <ImageGallery
-        :posts="[
-          {
-            id: 1,
-            image:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW1p196FdFnjs53-qod0Iv6TbQwPWf3M4yZTRbJHH9KQ&s',
-          },
-          {
-            id: 2,
-            image:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW1p196FdFnjs53-qod0Iv6TbQwPWf3M4yZTRbJHH9KQ&s',
-          },
-        ]"
-      />
+      <ImageGallery :posts="posts" />
     </div>
   </BaseContainer>
 </template>
@@ -32,6 +20,13 @@
   import BaseContainer from '@/components/BaseContainer.vue';
   import UserBar from '@/components/UserBar.vue';
   import ImageGallery from './ImageGallery.vue';
+  import { ref } from 'vue';
+
+  const posts = ref([]);
+
+  const addNewPost = (post) => {
+    posts.value.unshift(post);
+  };
 </script>
 
 <style scoped>
