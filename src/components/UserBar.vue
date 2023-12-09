@@ -1,11 +1,21 @@
 <template>
-  <div class="userbar-container">
+  <div
+    class="userbar-container"
+    v-if="user"
+  >
     <div class="top-content">
-      <ATypographyTitle :level="2">{{ username }}</ATypographyTitle>
-      <UploadPhoto
-        v-if="user && profileUsername === user.username"
-        :addNewPost="addNewPost"
-      />
+      <ATypographyTitle :level="2">{{ user.username }}</ATypographyTitle>
+      <div v-if="user">
+        <UploadPhoto
+          v-if="profileUsername === loggedUser.username"
+          :addNewPost="addNewPost"
+        />
+        <AButton
+          v-else
+          @click="followUser"
+          >Follow</AButton
+        >
+      </div>
     </div>
     <div class="bottom-content">
       <ATypographyTitle :level="5">{{ userInfo.posts }} posts</ATypographyTitle>
@@ -17,6 +27,14 @@
       >
     </div>
   </div>
+  <div
+    v-else
+    class="userbar-container"
+  >
+    <div class="top-content">
+      <ATypographyTitle :level="2">User Not Found</ATypographyTitle>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -24,14 +42,22 @@
   import { useRoute } from 'vue-router';
   import { useUserStore } from '@/stores/users';
   import { storeToRefs } from 'pinia';
+  import { supabase } from '@/supabase';
 
-  defineProps(['username', 'userInfo', 'addNewPost']);
+  const props = defineProps(['user', 'userInfo', 'addNewPost']);
 
   const route = useRoute();
   const userStore = useUserStore();
 
-  const { user } = storeToRefs(userStore);
+  const { user: loggedUser } = storeToRefs(userStore);
   const { username: profileUsername } = route.params;
+
+  const followUser = async () => {
+    await supabase.from('followers_followings').insert({
+      follower_id: loggedUser.value.id,
+      following_id: props.user.id,
+    });
+  };
 </script>
 
 <style scoped>

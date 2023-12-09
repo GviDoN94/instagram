@@ -4,6 +4,6 @@
 
 <template>
   <main>
-    <ProfileComponent />
+    <ProfileComponent :key="$route.params.username" />
   </main>
 </template>
