@@ -10,11 +10,20 @@
           v-if="profileUsername === loggedUser.username"
           :addNewPost="addNewPost"
         />
-        <AButton
-          v-else
-          @click="followUser"
-          >Follow</AButton
-        >
+        <div v-else>
+          <AButton
+            v-if="!props.isFollowing"
+            @click="followUser"
+          >
+            Follow
+          </AButton>
+          <AButton
+            v-else
+            @click="followUser"
+          >
+            Following
+          </AButton>
+        </div>
       </div>
     </div>
     <div class="bottom-content">
@@ -44,7 +53,7 @@
   import { storeToRefs } from 'pinia';
   import { supabase } from '@/supabase';
 
-  const props = defineProps(['user', 'userInfo', 'addNewPost']);
+  const props = defineProps(['user', 'userInfo', 'addNewPost', 'isFollowing']);
 
   const route = useRoute();
   const userStore = useUserStore();
@@ -53,7 +62,7 @@
   const { username: profileUsername } = route.params;
 
   const followUser = async () => {
-    await supabase.from('followers_followings').insert({
+    await supabase.from('followers_following').insert({
       follower_id: loggedUser.value.id,
       following_id: props.user.id,
     });
