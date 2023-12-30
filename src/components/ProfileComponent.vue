@@ -14,6 +14,7 @@
         }"
         :addNewPost="addNewPost"
         :isFollowing="isFollowing"
+        :updateIsFollowing="updateIsFollowing"
       />
       <ImageGallery :posts="posts" />
     </div>
@@ -48,6 +49,10 @@
 
   const addNewPost = (post) => {
     posts.value.unshift(post);
+  };
+
+  const updateIsFollowing = (follow) => {
+    isFollowing.value = follow;
   };
 
   const fetchData = async () => {

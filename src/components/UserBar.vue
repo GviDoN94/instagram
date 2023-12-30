@@ -19,7 +19,7 @@
           </AButton>
           <AButton
             v-else
-            @click="followUser"
+            @click="unfollowUser"
           >
             Following
           </AButton>
@@ -53,7 +53,13 @@
   import { storeToRefs } from 'pinia';
   import { supabase } from '@/supabase';
 
-  const props = defineProps(['user', 'userInfo', 'addNewPost', 'isFollowing']);
+  const props = defineProps([
+    'user',
+    'userInfo',
+    'addNewPost',
+    'isFollowing',
+    'updateIsFollowing',
+  ]);
 
   const route = useRoute();
   const userStore = useUserStore();
@@ -62,10 +68,20 @@
   const { username: profileUsername } = route.params;
 
   const followUser = async () => {
+    props.updateIsFollowing(true);
     await supabase.from('followers_following').insert({
       follower_id: loggedUser.value.id,
       following_id: props.user.id,
     });
+  };
+
+  const unfollowUser = async () => {
+    props.updateIsFollowing(false);
+    await supabase
+      .from('followers_following')
+      .delete()
+      .eq('follower_id', loggedUser.value.id)
+      .eq('following_id', props.user.id);
   };
 </script>
 
