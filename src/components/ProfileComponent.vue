@@ -7,11 +7,7 @@
       <UserBar
         :key="$route.params.username"
         :user="user"
-        :userInfo="{
-          posts: 5,
-          followers: 400,
-          following: 300,
-        }"
+        :userInfo="userInfo"
         :addNewPost="addNewPost"
         :isFollowing="isFollowing"
         :updateIsFollowing="updateIsFollowing"
@@ -31,7 +27,7 @@
   import BaseContainer from '@/components/BaseContainer.vue';
   import UserBar from '@/components/UserBar.vue';
   import ImageGallery from '@/components/ImageGallery.vue';
-  import { ref, onMounted, watch } from 'vue';
+  import { ref, reactive, onMounted, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import { supabase } from '@/supabase';
   import { useUserStore } from '@/stores/users';
@@ -46,6 +42,11 @@
   const isFollowing = ref(false);
   const posts = ref([]);
   const loading = ref(false);
+  const userInfo = reactive({
+    posts: null,
+    followers: null,
+    following: null,
+  });
 
   const addNewPost = (post) => {
     posts.value.unshift(post);
@@ -78,12 +79,37 @@
 
     posts.value = postsData;
 
-    await fetchFollowing();
+    await fetchIsFollowing();
+
+    const followerCount = await fetchFollowersCount();
+    const followingCount = await fetchFollowingCount();
+
+    userInfo.followers = followerCount;
+    userInfo.following = followingCount;
+    userInfo.posts = posts.value.length;
 
     loading.value = false;
   };
 
-  const fetchFollowing = async () => {
+  const fetchFollowersCount = async () => {
+    const { count } = await supabase
+      .from('followers_following')
+      .select('*', { count: 'exact' })
+      .eq('following_id', user.value.id);
+
+    return count;
+  };
+
+  const fetchFollowingCount = async () => {
+    const { count } = await supabase
+      .from('followers_following')
+      .select('*', { count: 'exact' })
+      .eq('follower_id', user.value.id);
+
+    return count;
+  };
+
+  const fetchIsFollowing = async () => {
     if (
       loggedInUser.value &&
       user.value &&
@@ -101,7 +127,7 @@
   };
 
   watch(loggedInUser, () => {
-    fetchFollowing();
+    fetchIsFollowing();
   });
 
   onMounted(() => {
