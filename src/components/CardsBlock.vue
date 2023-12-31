@@ -32,7 +32,8 @@
     const { data } = await supabase
       .from('posts')
       .select()
-      .in('owner_id', ownerIds);
+      .in('owner_id', ownerIds)
+      .order('created_at', { ascending: false });
 
     posts.value = data;
   };
