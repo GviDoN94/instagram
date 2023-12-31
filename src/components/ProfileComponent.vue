@@ -48,13 +48,9 @@
     following: null,
   });
 
-  const addNewPost = (post) => {
-    posts.value.unshift(post);
-  };
+  const addNewPost = (post) => posts.value.unshift(post);
 
-  const updateIsFollowing = (follow) => {
-    isFollowing.value = follow;
-  };
+  const updateIsFollowing = (follow) => (isFollowing.value = follow);
 
   const fetchData = async () => {
     loading.value = true;
@@ -126,13 +122,9 @@
     }
   };
 
-  watch(loggedInUser, () => {
-    fetchIsFollowing();
-  });
+  watch(loggedInUser, () => fetchIsFollowing());
 
-  onMounted(() => {
-    fetchData();
-  });
+  onMounted(() => fetchData());
 </script>
 
 <style scoped>

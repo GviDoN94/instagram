@@ -63,9 +63,7 @@
     }
   };
 
-  const handleLogout = async () => {
-    await userStore.handleLogout();
-  };
+  const handleLogout = async () => await userStore.handleLogout();
 
   const goToUsersProfile = () => {
     router.push(`/profile/${user.value.username}`);

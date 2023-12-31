@@ -6,7 +6,7 @@
     <template #cover>
       <img
         :alt="post.username"
-        :src="post.url"
+        :src="`https://qpctjwkbdisulqkzzsxc.supabase.co/storage/v1/object/public/images/${post.url}`"
       />
     </template>
     <ACardMeta :title="post.username">
