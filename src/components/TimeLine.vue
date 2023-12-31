@@ -1,40 +1,42 @@
 <template>
   <BaseContainer>
-    <div class="timeline-container">
-      <TimeLineCard
-        v-for="post in data"
-        :key="post.id"
-        :post="post"
-      />
+    <div v-if="!loadingUser">
+      <CardsBlock v-if="user" />
+      <LogInMessage v-else />
+    </div>
+    <div
+      v-else
+      class="timeline-spinner"
+    >
+      <ASpin />
     </div>
   </BaseContainer>
 </template>
 
 <script setup>
   import BaseContainer from '@/components/BaseContainer.vue';
-  import TimeLineCard from '@/components/TimeLineCard.vue';
+  import CardsBlock from '@/components/CardsBlock.vue';
+  import LogInMessage from '@/components/LogInMessage.vue';
+  import { useUserStore } from '../stores/users';
+  import { storeToRefs } from 'pinia';
 
-  const data = [
-    {
-      id: 1,
-      username: 'selena',
-      url: 'https://people.com/thmb/iappNGGhepXDJzz0vRgwfNsgi-I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(986x481:988x483)/selena-gomez-bday-072223-tout-1718660cd1f749f3b0a9f8c71e3dea0a.jpg',
-      caption: 'i like violet',
-    },
-    {
-      id: 2,
-      username: 'the weekend',
-      url: 'https://www.film.ru/sites/default/files/people/3733162-2552813.jpg',
-      caption: 'hello guys',
-    },
-  ];
+  const userStore = useUserStore();
+
+  const { user, loadingUser } = storeToRefs(userStore);
 </script>
 
-<style scoped>
+<style>
   .timeline-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
+  }
+
+  .timeline-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
   }
 </style>
