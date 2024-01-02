@@ -6,7 +6,7 @@
     <template #cover>
       <img
         :alt="post.username"
-        :src="`https://qpctjwkbdisulqkzzsxc.supabase.co/storage/v1/object/public/images/${post.url}`"
+        :src="`${VITE_BASE_PHOTO_URL}${post.url}`"
       />
     </template>
     <ACardMeta :title="post.username">
@@ -17,6 +17,8 @@
 
 <script setup>
   defineProps(['post']);
+
+  const { VITE_BASE_PHOTO_URL } = import.meta.env;
 </script>
 
 <style scoped>
